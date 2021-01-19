@@ -44,5 +44,5 @@ def submit(competition, series, description):
     series.to_csv(file_path)
 
     # Submit.
-    kaggle.api.competition_submit(file_path, description, competition)
+    kaggle.api.competition_submit(file_path, description, competition, quiet=True)
     return get_recent_submission_score(competition)
