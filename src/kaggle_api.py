@@ -1,6 +1,30 @@
 import os
+import time
+import logging
 
 import kaggle
+
+
+def get_recent_submission(competition):
+    submissions = kaggle.api.competition_submissions(competition)
+    return sorted(submissions, key=lambda s: s.ref)[-1]
+
+
+def get_recent_submission_score(competition):
+    max_wait = 60
+
+    while max_wait > 0:
+        submission = get_recent_submission(competition)
+        if submission.status != 'pending':
+            break
+        time.sleep(1)
+        max_wait -= 1
+
+    if submission.status == 'error':
+        logging.error(f'Submission error:\n{submission.errorDescription}')
+        return 0
+
+    return submission.publicScore
 
 
 def submit(competition, series, description):
@@ -21,3 +45,4 @@ def submit(competition, series, description):
 
     # Submit.
     kaggle.api.competition_submit(file_path, description, competition)
+    return get_recent_submission_score(competition)
