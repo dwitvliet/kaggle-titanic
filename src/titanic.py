@@ -28,7 +28,7 @@ def status_of_others_sharing_factor(shared_factor, df_train, df_test=None):
     # Determine if most people died, survived, or an equal amount of people died
     # and survived.
     status_of_others = np.sign(others_survived - others_died).replace(
-        {-1: 'most_died', 0: 'equal/NaN', 1: 'most_survived'}
+        {-1: 'most_died', 0: 'equal_or_NaN', 1: 'most_survived'}
     )
 
     return status_of_others
