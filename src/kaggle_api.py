@@ -6,11 +6,32 @@ import kaggle
 
 
 def get_recent_submission(competition):
+    """ Get the most recent submission.
+
+    Args:
+        competition (str): Kaggle competition to get the submission for.
+
+    Returns:
+        Submission object with attributes `status` and `publicScore`.
+
+    """
     submissions = kaggle.api.competition_submissions(competition)
     return sorted(submissions, key=lambda s: s.ref)[-1]
 
 
 def get_recent_submission_score(competition):
+    """ Get the score of the most recent submission.
+
+    Wait until the submission status is no longer pending (for a maximum of 60
+    seconds), then return the submission score.
+
+    Args:
+        competition (str): Kaggle competition to get the submission for.
+
+    Returns:
+        float
+
+    """
     max_wait = 60
 
     while max_wait > 0:
@@ -28,6 +49,19 @@ def get_recent_submission_score(competition):
 
 
 def submit(competition, series, description):
+    """
+
+    Args:
+        competition (str): Kaggle competition to get the submission for.
+        series (pd.Series): Series containing all predictions as values and all
+            test ids as index. The name of the index and series becomes the
+            header for the submission file.
+        description (str): Description of submission.
+
+    Returns:
+        float: Submission score.
+
+    """
 
     # Create directory to save submission if it does not exist.
     if not os.path.exists('submissions'):
